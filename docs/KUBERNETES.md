@@ -3,7 +3,7 @@
 
 NSD can be run on Kubernetes.
 
-##
+## Secrets
 
 ```yaml
 apiVersion: v1
@@ -19,6 +19,7 @@ data:
   Kdomain.tld.zsk.private: xxx
 ```
 
+## Deployment
 
 ```yaml
 apiVersion: apps/v1
@@ -66,7 +67,7 @@ spec:
           mountPath: /zones
       initContainers:
       - name: init
-        image: selfhostingtools/nsd:v1
+        image: ghcr.io/the-kube-way/nsd:latest
         imagePullPolicy: Always
         args:
           - init.sh
@@ -142,9 +143,20 @@ metadata:
   labels:
     app: nsd
 data:
-  domain.tld: xxx
-```
+  domain.tld: |
+    $ORIGIN domain.tld.
+    $TTL 3600
 
+    ; SOA
+    ; EPOCH_TO_BE_UPDATED will be updated automatically on DNSSEC signature (not updated if no DNSSEC)
+    @       IN SOA    domain.tld. webmaster.domain.tld. EPOCH_TO_BE_UPDATED 300 60 604800 60
+
+    ; dns
+    @       NS        ns1.example.com.
+
+    ; k8s
+    wwww    IN A      0.0.0.0
+```
 
 DNSSEC signatures expire after 28d. As this tool resigns dns zones at startup, the container should be restarted before then.
 This cronjob restart the container on a weekly basis.
