@@ -44,10 +44,13 @@ RUN ./configure \
     make && \
     make install DESTDIR=/builder
 
+# Temporary fix
+RUN cd /builder && tar -czvf /builder.tar.gz *
+
 
 FROM alpine:latest
 
-LABEL Maintainer "Selfhosting-tools (https://github.com/selfhosting-tools)"
+LABEL Maintainer "The-Kube-Way (https://github.com/The-Kube-Way/nsd)"
 
 RUN apk add --no-cache \
    ldns \
@@ -56,7 +59,11 @@ RUN apk add --no-cache \
    openssl \
    tini
 
-COPY --from=builder /builder /
+# COPY --from=builder /builder /
+# Temporary fix as COPY command above does not work with docker buildx
+COPY --from=builder /builder.tar.gz /
+RUN tar -C / -xvf /builder.tar.gz && rm /builder.tar.gz
+
 COPY bin /usr/local/bin
 
 ENV UID=991 GID=991
