@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -eo pipefail
+
+DOMAIN="$1"
+EXPIRATION_DATE="$2"
+
+if [ -z "$DOMAIN" ]; then
+  echo "Domain name must be defined" 1>&2
+  exit 1
+fi
+
+if [ -n "$EXPIRATION_DATE" ]; then
+  arg="-e${EXPIRATION_DATE}"
+  echo "Signature will expire on ${EXPIRATION_DATE}"
+else
+  echo "Using default expiration date: 1 month later from now"
+fi
+
+cd /zones
+
+updateserial "$DOMAIN"
+
+echo "Signing zone for ${DOMAIN}"
+ldns-signzone ${arg} -n -s "$(head /dev/urandom | tr -dc A-Za-z0-9 | sha1sum | head -c 30)" \
+  -f "/zones/${DOMAIN}.signed" "${DOMAIN}" "/keys/K${DOMAIN}.zsk" "/keys/K${DOMAIN}.ksk"
+
+echo "Signed zone stored in /zones/${DOMAIN}.signed"
+
+exit 0

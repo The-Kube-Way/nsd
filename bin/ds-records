@@ -1,0 +1,22 @@
+#!/bin/sh
+
+set -eu
+
+DOMAIN="$1"
+
+if [ -z "$DOMAIN" ]; then
+  echo "Domain name must be defined" 1>&2
+  exit 1
+fi
+
+echo -e "\n> DS record 1 [Digest Type = SHA1]:"
+ldns-key2ds -n -1 "/zones/${DOMAIN}.signed"
+
+echo -e "\n> DS record 2 [Digest Type = SHA256]:"
+ldns-key2ds -n -2 "/zones/${DOMAIN}.signed"
+
+echo -e "\n> Public KSK Key:"
+tail -n 1 "/keys/K${DOMAIN}.ksk.key"
+echo
+
+exit 0

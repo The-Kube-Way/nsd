@@ -1,0 +1,27 @@
+#!/bin/sh
+
+# This script only works if SOA record is on one line
+# In this case, the serial is replaced by the epoch (in seconds)
+
+set -euo pipefail
+
+DOMAIN="$1"
+
+if [ -z "$DOMAIN" ]; then
+  echo "Domain name must be defined" 1>&2
+  exit 1
+fi
+
+cd /zones
+
+SERIAL=$(grep '^@.*IN.*SOA.*' "$DOMAIN" | awk '{print $6}')
+if [ -n "$SERIAL" ]; then
+  NEW_SERIAL=$(date +%s)
+  sed -i s/"$SERIAL"/"$NEW_SERIAL"/ "$DOMAIN"
+  echo "Serial updated for $DOMAIN"
+else
+  echo "Serial not found for $DOMAIN" 1>&2
+  exit 2
+fi
+
+exit 0
