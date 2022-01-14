@@ -23,7 +23,7 @@ RUN \
    CHECKSUM=$(sha256sum nsd-${NSD_VERSION}.tar.gz | awk '{print $1}') && \
    if [ "${CHECKSUM}" != "${SHA256_HASH}" ]; then echo "ERROR: Checksum does not match!" && exit 1; fi && \
    ( \
-      gpg --keyserver ha.pool.sks-keyservers.net --recv-keys ${GPG_FINGERPRINT} || \
+      gpg --keyserver keyserver.ubuntu.com --recv-keys ${GPG_FINGERPRINT} || \
       gpg --keyserver keyserver.pgp.com --recv-keys ${GPG_FINGERPRINT} || \
       gpg --keyserver pgp.mit.edu --recv-keys ${GPG_FINGERPRINT} \
    ) && \
