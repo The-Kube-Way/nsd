@@ -1,5 +1,8 @@
 name: Docker
 
+env:
+  NSD_VERSION: 4.7.0
+
 on:
   push:
     branches:
@@ -31,4 +34,4 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ghcr.io/the-kube-way/nsd:latest
+        tags: ghcr.io/PhilippKuntschik/nsd:latest,ghcr.io/PhilippKuntschik/nsd:v{{NSD_VERSION}}
