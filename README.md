@@ -28,7 +28,7 @@ services:
   nsd:
     container_name: nsd
     restart: always
-    image: ghcr.io/the-kube-way/nsd:latest
+    image: ghcr.io/the-kube-way/nsd:latest  # or nsd:vX.X.X
     read_only: true
     tmpfs:
       - /tmp
