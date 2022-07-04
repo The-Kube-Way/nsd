@@ -15,6 +15,7 @@ jobs:
     - name: Extract NSD version from Dockerfile
       run: |
         NSD_VERSION=$(grep "ARG NSD_VERSION" Dockerfile | cut -d= -f 2)
+        echo "NSD VERSION: $NSD_VERSION"
         [ -z "$NSD_VERSION" ] && echo "Empty version string" && exit 1
         echo "NSD_VERSION=$NSD_VERSION" >> $GITHUB_ENV
 
