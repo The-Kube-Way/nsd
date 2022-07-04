@@ -1,7 +1,7 @@
 name: Docker
 
 env:
-  NSD_VERSION: 4.7.0
+  NSD_VERSION: 4.6.0
 
 on:
   push:
@@ -34,4 +34,4 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         push: true
-        tags: ghcr.io/PhilippKuntschik/nsd:latest,ghcr.io/PhilippKuntschik/nsd:v{{NSD_VERSION}}
+        tags: ghcr.io/the-kube-way/nsd:latest,ghcr.io/the-kube-way/nsd:v{{NSD_VERSION}}
